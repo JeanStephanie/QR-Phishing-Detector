@@ -1,0 +1,40 @@
+<nav class="navbar navbar-expand-lg site-nav" id="site-nav">
+    <div class="container nav-shell">
+        <a class="navbar-brand" href="{{ url_for('main.home') }}">
+            <span class="brand-mark"><i data-lucide="shield"></i></span>
+            <span class="brand-text">SafeNet</span>
+        </a>
+
+        <button class="nav-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMain" aria-controls="navMain" aria-expanded="false" aria-label="Open menu">
+            <i data-lucide="menu" class="icon-menu"></i>
+            <i data-lucide="x" class="icon-close"></i>
+        </button>
+
+        <div class="collapse navbar-collapse nav-collapse" id="navMain">
+            <div class="nav-center">
+                <ul class="nav-menu" role="list">
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('main.home') }}" data-nav="home">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('main.scan') }}" data-nav="scan">Scan</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('main.webcam') }}" data-nav="webcam">Webcam</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('main.history') }}" data-nav="history">History</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('main.dashboard') }}" data-nav="dashboard">Dashboard</a></li>
+                    {% if is_logged_in %}
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('main.admin') }}" data-nav="admin">Admin</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+
+            <div class="nav-actions">
+                <button type="button" class="theme-switch" id="theme-toggle" aria-label="Toggle theme"></button>
+                <span class="nav-divider" aria-hidden="true"></span>
+                {% if is_logged_in %}
+                <a href="{{ url_for('main.dashboard') }}" class="btn btn-ghost btn-sm nav-user">{{ user_email|truncate(18) }}</a>
+                <a href="{{ url_for('main.logout') }}" class="btn btn-secondary btn-sm">Sign out</a>
+                {% else %}
+                <a href="{{ url_for('main.login') }}" class="btn btn-ghost btn-sm">Sign in</a>
+                <a href="{{ url_for('main.register') }}" class="btn btn-primary btn-sm">Get started</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</nav>

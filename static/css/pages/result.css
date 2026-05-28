@@ -1,0 +1,133 @@
+.result-banner {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px 24px;
+  border-radius: var(--radius-lg);
+  margin-bottom: 24px;
+  border: 1px solid var(--border);
+}
+
+.result-banner.safe { background: var(--success-bg); border-color: transparent; }
+.result-banner.suspicious { background: var(--warning-bg); border-color: transparent; }
+.result-banner.malicious { background: var(--danger-bg); border-color: transparent; }
+
+.result-banner h2 {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 4px;
+}
+
+.result-banner p {
+  margin: 0;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.url-block {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  word-break: break-all;
+  padding: 14px 16px;
+  background: var(--bg-subtle);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  margin-bottom: 20px;
+  color: var(--text);
+}
+
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.metric {
+  padding: 16px;
+  text-align: center;
+}
+
+.metric .val {
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+}
+
+.metric .lbl {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+.gauge-wrap {
+  position: relative;
+  width: 140px;
+  height: 140px;
+  margin: 0 auto 8px;
+}
+
+.gauge-center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.gauge-center .score {
+  font-size: 28px;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+}
+
+.gauge-center .sub {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.indicator {
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.indicator strong {
+  display: block;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-muted);
+  text-transform: capitalize;
+  margin-bottom: 4px;
+}
+
+.indicator p { margin: 0; color: var(--text-secondary); }
+
+.rec-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.rec-list li {
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 14px;
+  color: var(--text-secondary);
+  padding-left: 16px;
+  position: relative;
+}
+
+.rec-list li::before {
+  content: '—';
+  position: absolute;
+  left: 0;
+  color: var(--text-muted);
+}
+
+.rec-list li:last-child { border-bottom: none; }
+
+.chart-box { height: 200px; position: relative; }

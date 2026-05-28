@@ -1,0 +1,55 @@
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 24px;
+  align-items: center;
+}
+
+.filters .form-control { max-width: 320px; flex: 1; min-width: 200px; }
+
+.filter-tabs {
+  display: flex;
+  gap: 4px;
+  background: var(--bg-subtle);
+  padding: 4px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+}
+
+.filter-tabs a {
+  padding: 6px 12px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  text-decoration: none;
+  border-radius: var(--radius-sm);
+}
+
+.filter-tabs a:hover { color: var(--text); }
+.filter-tabs a.active {
+  background: var(--bg-elevated);
+  color: var(--text);
+  box-shadow: var(--shadow-sm);
+}
+
+.timeline { border-left: 1px solid var(--border); padding-left: 20px; }
+
+.timeline-item {
+  padding-bottom: 16px;
+  position: relative;
+}
+
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  left: -25px;
+  top: 6px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--border-strong);
+}
+
+.timeline-item.danger::before { background: var(--danger); }
+.timeline-item.warn::before { background: var(--warning); }

@@ -1,0 +1,123 @@
+/* Subtle motion — vanilla CSS only */
+
+.site-nav {
+  transition:
+    height 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+    background-color 0.35s ease,
+    box-shadow 0.35s ease,
+    border-color 0.35s ease,
+    backdrop-filter 0.35s ease;
+}
+
+.site-nav.scrolled {
+  height: 56px;
+  background: color-mix(in srgb, var(--bg-elevated) 78%, transparent);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: var(--shadow-md);
+  border-bottom-color: var(--border-strong);
+}
+
+.site-nav.scrolled .brand-mark {
+  transform: scale(0.92);
+}
+
+.site-nav .brand-mark {
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+
+/* Scroll reveal */
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition:
+    opacity 0.65s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.65s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reveal-delay-1 { transition-delay: 0.08s; }
+.reveal-delay-2 { transition-delay: 0.16s; }
+.reveal-delay-3 { transition-delay: 0.24s; }
+
+/* Parallax layers — transform set by JS */
+[data-parallax] {
+  will-change: transform;
+}
+
+.hero-parallax-wrap {
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-bg-glow {
+  position: absolute;
+  width: 480px;
+  height: 480px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--accent-muted) 0%, transparent 70%);
+  top: -120px;
+  right: -80px;
+  pointer-events: none;
+  opacity: 0.6;
+  z-index: 0;
+}
+
+.hero .container {
+  position: relative;
+  z-index: 1;
+}
+
+.hero-preview {
+  transition: box-shadow 0.4s ease, transform 0.4s ease;
+}
+
+.hero-preview.is-visible {
+  box-shadow: var(--shadow-lg);
+}
+
+/* Card hover lift — subtle */
+.motion-lift {
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.motion-lift:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+}
+
+.site-nav.nav-hide {
+  transform: translateY(calc(-100% - 1px));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-nav.nav-hide {
+    transform: none;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  [data-parallax] {
+    transform: none !important;
+    will-change: auto;
+  }
+
+  .site-nav,
+  .site-nav .brand-mark,
+  .hero-preview,
+  .motion-lift {
+    transition: none !important;
+  }
+
+  .motion-lift:hover {
+    transform: none;
+  }
+}

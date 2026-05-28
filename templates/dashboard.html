@@ -1,0 +1,91 @@
+{% extends "layout.html" %}
+{% block title %}Dashboard — SafeNet{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/pages/dashboard.css') }}">{% endblock %}
+
+{% block content %}
+<div class="section">
+    <div class="container">
+        <div class="page-header">
+            <h1>Dashboard</h1>
+            <p>Overview of scan activity and recent events.</p>
+        </div>
+
+        <div class="stat-grid">
+            <div class="card stat-card">
+                <div class="stat-label">Total scans</div>
+                <div class="stat-value" data-counter="{{ stats.total_scans }}">0</div>
+            </div>
+            <div class="card stat-card">
+                <div class="stat-label">Today</div>
+                <div class="stat-value" data-counter="{{ stats.scans_today }}">0</div>
+            </div>
+            <div class="card stat-card">
+                <div class="stat-label">Threats flagged</div>
+                <div class="stat-value" data-counter="{{ stats.threats_blocked }}">0</div>
+            </div>
+            <div class="card stat-card">
+                <div class="stat-label">Active users</div>
+                <div class="stat-value" data-counter="{{ stats.active_users }}">0</div>
+            </div>
+        </div>
+
+        <div class="dash-grid">
+            <div class="card span-2">
+                <div class="widget-head">
+                    <h2>Scan volume</h2>
+                    <span>Last 7 days</span>
+                </div>
+                <div class="chart-panel"><canvas id="dashboard-scan-chart"></canvas></div>
+            </div>
+
+            <div class="card">
+                <div class="widget-head"><h2>Verdicts</h2></div>
+                <div class="chart-panel" style="height:240px;"><canvas id="dashboard-verdict-chart"></canvas></div>
+            </div>
+
+            <div class="card">
+                <div class="widget-head"><h2>Recent activity</h2></div>
+                {% for act in stats.recent_activity %}
+                <div class="activity-item">
+                    <span class="activity-dot {{ act.type }}"></span>
+                    <div>
+                        <div style="font-weight:500;">{{ act.action }}</div>
+                        <div style="font-size:13px;color:var(--text-secondary);">{{ act.detail }}</div>
+                        <small style="color:var(--text-muted);">{{ act.time }}</small>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <div class="card">
+                <div class="widget-head"><h2>Shortcuts</h2></div>
+                <div class="quick-grid">
+                    <a href="{{ url_for('main.scan') }}">Upload scan</a>
+                    <a href="{{ url_for('main.webcam') }}">Webcam</a>
+                    <a href="{{ url_for('main.history') }}">History</a>
+                    <a href="{{ url_for('main.admin') }}">Admin</a>
+                </div>
+                <div class="mt-4">
+                    <div class="d-flex justify-content-between mb-2" style="font-size:13px;">
+                        <span style="color:var(--text-secondary);">Malicious rate</span>
+                        <strong>{{ stats.malicious_rate }}%</strong>
+                    </div>
+                    <div class="progress-bar"><span style="width:{{ stats.malicious_rate }}%"></span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+window.dashboardData = {
+    chart_labels: {{ stats.chart_labels|tojson }},
+    chart_scans: {{ stats.chart_scans|tojson }},
+    chart_threats: {{ stats.chart_threats|tojson }},
+    verdict_distribution: {{ stats.verdict_distribution|tojson }}
+};
+</script>
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+{% endblock %}

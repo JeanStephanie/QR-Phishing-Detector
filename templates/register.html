@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+{% block title %}Create account — SafeNet{% endblock %}
+{% block footer %}{% endblock %}
+
+{% block content %}
+<div class="auth-page">
+    <div class="card auth-card">
+        <h1>Create account</h1>
+        <p class="auth-lead">Start scanning QR codes in under a minute.</p>
+
+        <form method="post">
+            <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control" id="email" name="email" required autocomplete="email">
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <div class="input-wrap">
+                    <input type="password" class="form-control" id="password" name="password" minlength="8" required autocomplete="new-password">
+                    <button type="button" class="toggle-pw" aria-label="Show password"><i data-lucide="eye"></i></button>
+                </div>
+            </div>
+            <div class="mb-4">
+                <label for="confirm_password" class="form-label">Confirm password</label>
+                <div class="input-wrap">
+                    <input type="password" class="form-control" id="confirm_password" name="confirm_password" required autocomplete="new-password">
+                    <button type="button" class="toggle-pw" aria-label="Show password"><i data-lucide="eye"></i></button>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Create account</button>
+        </form>
+
+        <div class="auth-divider">or</div>
+        <p class="text-center mb-0" style="font-size:14px;color:var(--text-secondary);">
+            Already registered? <a href="{{ url_for('main.login') }}" class="link">Sign in</a>
+        </p>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+{% block title %}Webcam — SafeNet{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/pages/webcam.css') }}">{% endblock %}
+
+{% block content %}
+<div class="section">
+    <div class="container container-narrow">
+        <div class="page-header text-center mx-auto" style="max-width:480px;">
+            <h1>Webcam scan</h1>
+            <p>Allow camera access, center the QR code in the frame, then capture.</p>
+        </div>
+
+        <div class="video-wrap" id="webcam-container">
+            <video id="webcam-video" autoplay playsinline muted></video>
+            <div class="video-meta">
+                <span id="webcam-status">Camera off</span>
+                <span>SafeNet</span>
+            </div>
+            <div class="scan-target"></div>
+        </div>
+
+        <div class="webcam-actions">
+            <button type="button" id="webcam-start" class="btn btn-primary">Start camera</button>
+            <button type="button" id="webcam-scan" class="btn btn-secondary" disabled>Capture & scan</button>
+            <button type="button" id="webcam-stop" class="btn btn-ghost" disabled>Stop</button>
+        </div>
+        <p class="hint">Works on localhost or HTTPS. Use your rear camera on mobile when possible.</p>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}<script src="{{ url_for('static', filename='js/webcam.js') }}"></script>{% endblock %}

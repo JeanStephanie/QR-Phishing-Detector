@@ -1,0 +1,48 @@
+.admin-tag {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+
+.health-item {
+  margin-bottom: 12px;
+}
+
+.health-item .row-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  margin-bottom: 6px;
+}
+
+.health-item .row-label span:first-child {
+  color: var(--text-secondary);
+  text-transform: capitalize;
+}
+
+.domain-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 14px;
+}
+
+.domain-row:last-child { border-bottom: none; }
+
+.domain-row .count {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.status-pill {
+  font-size: 11px;
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.status-pill.active { background: var(--success-bg); color: var(--success); }
+.status-pill.suspended { background: var(--danger-bg); color: var(--danger); }
