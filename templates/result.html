@@ -26,9 +26,26 @@
             <div class="col-lg-8">
                 <div class="card mb-4">
                     <div class="widget-head">
-                        <h2>Decoded URL</h2>
+                        <h2>Resolved destination</h2>
                     </div>
-                    <div class="url-block">{{ result.decoded_url }}</div>
+                    <div class="url-block">{{ result.final_url or result.decoded_url }}</div>
+                    {% if result.final_url and result.final_url != result.decoded_url %}
+                    <div class="url-meta">
+                        <span>QR payload</span>
+                        <strong>{{ result.decoded_url }}</strong>
+                    </div>
+                    {% endif %}
+                    {% if result.redirect_chain and result.redirect_chain|length > 1 %}
+                    <div class="redirect-chain">
+                        <div class="widget-head"><h2>Redirect chain</h2><span>{{ result.redirect_count or (result.redirect_chain|length - 1) }} hop{% if (result.redirect_count or (result.redirect_chain|length - 1)) != 1 %}s{% endif %}</span></div>
+                        {% for url in result.redirect_chain %}
+                        <div class="chain-row">
+                            <span>{{ loop.index }}</span>
+                            <p>{{ url }}</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
                     {% if result.preview_image %}
                     <img src="{{ result.preview_image }}" alt="QR" style="max-height:100px;border-radius:8px;border:1px solid var(--border);">
                     {% endif %}
@@ -64,11 +81,20 @@
                             <span class="sub">/ 100</span>
                         </div>
                     </div>
+                    <div class="risk-verdict {{ result.verdict }}">
+                        {% if result.verdict == 'safe' %}
+                        Low risk detected
+                        {% elif result.verdict == 'suspicious' %}
+                        Needs review
+                        {% else %}
+                        High risk detected
+                        {% endif %}
+                    </div>
                 </div>
 
                 <div class="metrics mb-4">
                     <div class="card metric">
-                        <div class="val">{{ result.phishing_probability }}%</div>
+                        <div class="val">{{ "%.1f"|format(result.phishing_probability) }}%</div>
                         <div class="lbl">Phishing probability</div>
                     </div>
                     <div class="card metric">
@@ -82,8 +108,18 @@
                 </div>
 
                 <div class="card mb-4">
-                    <div class="widget-head"><h2>Breakdown</h2></div>
+                    <div class="widget-head"><h2>Live analysis breakdown</h2></div>
                     <div class="chart-box"><canvas id="probability-chart"></canvas></div>
+                    {% set components = result.analysis_components or {} %}
+                    <div class="component-grid">
+                        <div><span>ML</span><strong>{{ "%.1f"|format(components.get("ml", 0)) }}</strong></div>
+                        <div><span>URL rules</span><strong>{{ components.get("security", 0) }}</strong></div>
+                        <div><span>SSL</span><strong>{{ components.get("ssl", 0) }}</strong></div>
+                        <div><span>Redirects</span><strong>{{ components.get("redirects", 0) }}</strong></div>
+                        <div><span>Domain age</span><strong>{{ components.get("domain_age", 0) }}</strong></div>
+                        <div><span>Blacklist</span><strong>{{ components.get("blacklist", 0) }}</strong></div>
+                        <div><span>Final</span><strong>{{ components.get("final", result.risk_score) }}</strong></div>
+                    </div>
                 </div>
 
                 <div class="d-grid gap-2">
@@ -99,6 +135,7 @@
 {% block extra_js %}
 <script>
 window.resultData = { risk_score: {{ result.risk_score }}, phishing_probability: {{ result.phishing_probability }} };
+window.resultData.components = {{ (result.analysis_components or {})|tojson }};
 </script>
 <script src="{{ url_for('static', filename='js/result.js') }}"></script>
 {% endblock %}

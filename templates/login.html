@@ -9,6 +9,7 @@
         <p class="auth-lead">Access your dashboard and scan history.</p>
 
         <form method="post">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <div class="mb-3">
                 <label for="email" class="form-label">Email</label>
                 <input type="email" class="form-control" id="email" name="email" placeholder="you@company.com" required autocomplete="email">
@@ -19,6 +20,10 @@
                     <input type="password" class="form-control" id="password" name="password" required autocomplete="current-password">
                     <button type="button" class="toggle-pw" aria-label="Show password"><i data-lucide="eye"></i></button>
                 </div>
+            </div>
+            <div class="form-check mb-3">
+                <input class="form-check-input" type="checkbox" id="remember" name="remember">
+                <label class="form-check-label" for="remember">Remember me</label>
             </div>
             <button type="submit" class="btn btn-primary btn-block">Sign in</button>
         </form>

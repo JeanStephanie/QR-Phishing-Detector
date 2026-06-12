@@ -1,6 +1,13 @@
 venv/
+.venv/
 __pycache__/
 *.pyc
 .env
 .vscode/
 static/uploads/
+uploads/*
+!uploads/.gitkeep
+instance/*.db
+logs/*
+!logs/.gitkeep
+ml/model.pkl

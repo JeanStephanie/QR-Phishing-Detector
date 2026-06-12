@@ -11,7 +11,9 @@
         </div>
 
         <div id="upload-section">
-            <form id="scan-upload-form">
+            <div id="scan-error" class="scan-error" role="alert"></div>
+            <form id="scan-upload-form" method="post" action="{{ url_for('main.upload') }}" enctype="multipart/form-data">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 <div class="upload-area" id="upload-zone">
                     <input type="file" name="qr_image" id="qr-file-input" accept="image/*" required>
                     <i data-lucide="upload" style="width:28px;height:28px;color:var(--text-muted);"></i>

@@ -46,3 +46,30 @@
 
 .status-pill.active { background: var(--success-bg); color: var(--success); }
 .status-pill.suspended { background: var(--danger-bg); color: var(--danger); }
+
+.admin-actions {
+  display: grid;
+  gap: 8px;
+  min-width: 280px;
+}
+
+.admin-actions form {
+  margin: 0;
+}
+
+.password-reset-form {
+  display: grid;
+  grid-template-columns: minmax(110px, 1fr) minmax(90px, 1fr) auto;
+  gap: 8px;
+  align-items: center;
+}
+
+@media (max-width: 768px) {
+  .admin-actions {
+    min-width: 220px;
+  }
+
+  .password-reset-form {
+    grid-template-columns: 1fr;
+  }
+}

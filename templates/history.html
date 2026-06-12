@@ -38,7 +38,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {% for item in history.items %}
+                            {% for item in history["items"] %}
                             <tr>
                                 <td class="cell-mono">{{ item.scan_id }}</td>
                                 <td class="cell-url" title="{{ item.url }}">{{ item.url }}</td>
@@ -68,7 +68,7 @@
                 <div class="card">
                     <div class="widget-head"><h2>Recent</h2></div>
                     <div class="timeline">
-                        {% for item in history.items[:5] %}
+                        {% for item in history["items"][:5] %}
                         <div class="timeline-item {% if item.verdict == 'malicious' %}danger{% elif item.verdict == 'suspicious' %}warn{% endif %}">
                             <strong style="font-size:14px;">{{ item.verdict|title }}</strong>
                             <p class="mb-0 mt-1" style="font-size:13px;color:var(--text-secondary);">{{ item.url|truncate(42) }}</p>
@@ -87,6 +87,6 @@
 {% endblock %}
 
 {% block extra_js %}
-<script>window.historyChartData = { safe: 45, suspicious: 20, malicious: 35 };</script>
+<script>window.historyChartData = {{ history.verdict_distribution|tojson }};</script>
 <script src="{{ url_for('static', filename='js/history.js') }}"></script>
 {% endblock %}

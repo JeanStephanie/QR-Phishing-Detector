@@ -42,6 +42,20 @@
 
 .preview-box.show { display: block; }
 
+.scan-error {
+  display: none;
+  margin-bottom: 16px;
+  padding: 12px 14px;
+  border: 1px solid var(--danger);
+  border-radius: var(--radius-md);
+  background: var(--danger-bg);
+  color: var(--danger);
+  font-size: 14px;
+  text-align: left;
+}
+
+.scan-error.show { display: block; }
+
 .preview-box img {
   max-width: 200px;
   border-radius: var(--radius-md);

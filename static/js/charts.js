@@ -25,6 +25,10 @@ window.SafeNetCharts = (function () {
   function lineChart(id, labels, scans, threats) {
     const el = document.getElementById(id);
     if (!el || typeof Chart === 'undefined') return null;
+    if (![...(scans || []), ...(threats || [])].some((value) => Number(value) > 0)) {
+      showEmptyChart(el, 'No scans yet');
+      return null;
+    }
     const c = colors();
     return new Chart(el, {
       type: 'line',
@@ -47,6 +51,10 @@ window.SafeNetCharts = (function () {
   function doughnutChart(id, labels, values, palette) {
     const el = document.getElementById(id);
     if (!el || typeof Chart === 'undefined') return null;
+    if (!(values || []).some((value) => Number(value) > 0)) {
+      showEmptyChart(el, 'No data yet');
+      return null;
+    }
     const c = colors();
     const cols = palette || [c.success, c.warning, c.danger];
     return new Chart(el, {
@@ -102,6 +110,16 @@ window.SafeNetCharts = (function () {
         plugins: { legend: { display: false }, tooltip: { enabled: false } },
       },
     });
+  }
+
+  function showEmptyChart(canvas, text) {
+    const wrap = canvas.parentElement;
+    if (!wrap) return;
+    canvas.style.display = 'none';
+    const empty = document.createElement('div');
+    empty.className = 'chart-empty';
+    empty.textContent = text;
+    wrap.appendChild(empty);
   }
 
   document.addEventListener('themechange', () => {

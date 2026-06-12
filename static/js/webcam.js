@@ -29,7 +29,7 @@
   }
 
   function stop() {
-    stream?.getTracks().forEach((t) => t.stop());
+    stream?.getTracks().forEach((track) => track.stop());
     stream = null;
     video.srcObject = null;
     if (statusEl) statusEl.textContent = 'Camera off';
@@ -41,18 +41,37 @@
   async function capture() {
     if (!stream) return;
     scanBtn.disabled = true;
-    if (statusEl) statusEl.textContent = 'Processing…';
-    await new Promise((r) => setTimeout(r, 2000));
+    if (statusEl) statusEl.textContent = 'Processing...';
+
     try {
+      if (!video.videoWidth || !video.videoHeight) {
+        throw new Error('Camera is not ready');
+      }
+
+      const canvas = document.createElement('canvas');
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      const context = canvas.getContext('2d');
+      if (!context) throw new Error('Unable to capture camera frame');
+      context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+      const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content || '';
       const res = await fetch('/api/webcam/complete', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({}),
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': csrfToken,
+        },
+        body: JSON.stringify({ image: canvas.toDataURL('image/jpeg', 0.9) }),
       });
-      const data = await res.json();
-      if (data.success && data.scan_id) window.location.href = '/result/' + data.scan_id;
-    } catch {
-      alert('Scan failed');
+      const data = await res.json().catch(() => ({}));
+      if (data.success && data.scan_id) {
+        window.location.href = '/result/' + encodeURIComponent(data.scan_id);
+        return;
+      }
+      throw new Error(data.error || data.message || `Scan failed (${res.status})`);
+    } catch (error) {
+      alert(error.message || 'Scan failed');
       scanBtn.disabled = false;
       if (statusEl) statusEl.textContent = 'Live';
     }

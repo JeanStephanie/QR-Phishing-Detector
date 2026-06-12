@@ -9,6 +9,7 @@
         <p class="auth-lead">Start scanning QR codes in under a minute.</p>
 
         <form method="post">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <div class="mb-3">
                 <label for="email" class="form-label">Email</label>
                 <input type="email" class="form-control" id="email" name="email" required autocomplete="email">
@@ -16,7 +17,7 @@
             <div class="mb-3">
                 <label for="password" class="form-label">Password</label>
                 <div class="input-wrap">
-                    <input type="password" class="form-control" id="password" name="password" minlength="8" required autocomplete="new-password">
+                    <input type="password" class="form-control" id="password" name="password" minlength="12" required autocomplete="new-password">
                     <button type="button" class="toggle-pw" aria-label="Show password"><i data-lucide="eye"></i></button>
                 </div>
             </div>

@@ -54,6 +54,8 @@
                         <small style="color:var(--text-muted);">{{ act.time }}</small>
                     </div>
                 </div>
+                {% else %}
+                <div class="empty-state">No scan or account activity yet.</div>
                 {% endfor %}
             </div>
 
@@ -63,7 +65,7 @@
                     <a href="{{ url_for('main.scan') }}">Upload scan</a>
                     <a href="{{ url_for('main.webcam') }}">Webcam</a>
                     <a href="{{ url_for('main.history') }}">History</a>
-                    <a href="{{ url_for('main.admin') }}">Admin</a>
+                    {% if is_admin %}<a href="{{ url_for('main.admin') }}">Admin</a>{% endif %}
                 </div>
                 <div class="mt-4">
                     <div class="d-flex justify-content-between mb-2" style="font-size:13px;">

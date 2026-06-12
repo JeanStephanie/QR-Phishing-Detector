@@ -10,6 +10,7 @@
   const scanBtn = document.getElementById('start-scan-btn');
   const progress = document.getElementById('scan-progress-fill');
   const form = document.getElementById('scan-upload-form');
+  const errorBox = document.getElementById('scan-error');
 
   if (!zone || !input) return;
 
@@ -28,6 +29,10 @@
   function pick(f) {
     if (!f?.type.startsWith('image/')) return;
     file = f;
+    if (errorBox) {
+      errorBox.textContent = '';
+      errorBox.classList.remove('show');
+    }
     showPreview(f);
   }
 
@@ -50,15 +55,27 @@
 
   async function run() {
     if (!file) return;
+    if (errorBox) {
+      errorBox.textContent = '';
+      errorBox.classList.remove('show');
+    }
     uploadSection.style.display = 'none';
     previewWrap.classList.remove('show');
     panel.classList.add('show');
     setStep(0);
     if (progress) progress.style.width = '0%';
 
-    const fd = new FormData();
-    fd.append('qr_image', file);
-    const req = fetch('/upload', { method: 'POST', body: fd, headers: { 'X-Requested-With': 'XMLHttpRequest' } });
+    const fd = new FormData(form || undefined);
+    fd.set('qr_image', file);
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content || '';
+    const req = fetch(form?.action || '/upload', {
+      method: 'POST',
+      body: fd,
+      headers: {
+        'X-Requested-With': 'XMLHttpRequest',
+        'X-CSRFToken': csrfToken,
+      },
+    });
 
     let pct = 0;
     const tick = setInterval(() => {
@@ -80,14 +97,18 @@
   async function finish(req) {
     try {
       const res = await req;
-      const data = await res.json();
+      const data = await res.json().catch(() => ({}));
       if (data.success && data.redirect) window.location.href = data.redirect;
-      else throw new Error(data.error || 'Failed');
+      else throw new Error(data.error || data.message || `Scan failed (${res.status})`);
     } catch (e) {
-      alert(e.message || 'Scan failed');
+      if (errorBox) {
+        errorBox.textContent = e.message || 'Scan failed. Please try another QR image.';
+        errorBox.classList.add('show');
+      }
       panel.classList.remove('show');
       uploadSection.style.display = 'block';
       previewWrap.classList.add('show');
+      if (scanBtn) scanBtn.disabled = false;
     }
   }
 

@@ -11,19 +11,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (probCanvas && window.resultData) {
     const c = SafeNetCharts.getThemeColors();
-    const prob = window.resultData.phishing_probability;
+    const components = window.resultData.components || {};
+    const labels = ['ML', 'URL rules', 'SSL', 'Redirects', 'Domain age', 'Blacklist', 'Final'];
+    const values = labels.map((label) => {
+      const key = label === 'URL rules' ? 'security' : label.toLowerCase().replace(' ', '_');
+      return Number(components[key] || 0);
+    });
     new Chart(probCanvas, {
       type: 'bar',
       data: {
-        labels: ['Safe', 'Suspicious', 'Malicious'],
+        labels,
         datasets: [{
-          label: 'Probability %',
-          data: [
-            prob < 30 ? 100 - prob : 20,
-            prob >= 30 && prob < 70 ? prob : 25,
-            prob >= 70 ? prob : 15,
-          ],
-          backgroundColor: [c.green + '99', c.yellow + '99', c.red + '99'],
+          label: 'Score contribution',
+          data: values,
+          backgroundColor: [c.accent + '99', c.warning + '99', c.danger + '99', c.warning + '88', c.accent + '77', c.danger + 'aa', c.success + '99'],
           borderRadius: 8,
         }],
       },
@@ -33,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
         plugins: { legend: { display: false } },
         scales: {
           y: { max: 100, ticks: { color: c.text }, grid: { color: 'rgba(148,163,184,0.1)' } },
-          x: { ticks: { color: c.text }, grid: { display: false } },
+          x: { ticks: { color: c.text, maxRotation: 45, minRotation: 0 }, grid: { display: false } },
         },
       },
     });
