@@ -3,4 +3,5 @@ __pycache__/
 *.pyc
 .env
 .vscode/
-static/uploads/
+static/uploads/*
+!static/uploads/.gitkeep
