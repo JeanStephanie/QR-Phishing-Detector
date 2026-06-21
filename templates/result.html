@@ -1,0 +1,104 @@
+{% extends "layout.html" %}
+{% block title %}Results — SafeNet{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/pages/result.css') }}">{% endblock %}
+
+{% block content %}
+<div class="section">
+    <div class="container">
+        <div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
+            <div class="page-header mb-0">
+                <h1>Scan report</h1>
+                <p>{{ result.scan_id }} · {{ result.scanned_at }}</p>
+            </div>
+            <span class="badge badge-{% if result.verdict == 'safe' %}safe{% elif result.verdict == 'suspicious' %}warning{% else %}danger{% endif %}">{{ result.verdict }}</span>
+        </div>
+
+        <div class="result-banner {{ result.verdict }}">
+            <div>
+                <h2>
+                    {% if result.verdict == 'safe' %}Looks safe{% elif result.verdict == 'suspicious' %}Proceed with caution{% else %}Likely phishing{% endif %}
+                </h2>
+                <p>Completed in {{ result.scan_duration_ms }}ms</p>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-lg-8">
+                <div class="card mb-4">
+                    <div class="widget-head">
+                        <h2>Decoded URL</h2>
+                    </div>
+                    <div class="url-block">{{ result.decoded_url }}</div>
+                    {% if result.preview_image %}
+                    <img src="{{ result.preview_image }}" alt="QR" style="max-height:100px;border-radius:8px;border:1px solid var(--border);">
+                    {% endif %}
+                </div>
+
+                <div class="card mb-4">
+                    <div class="widget-head"><h2>Indicators</h2></div>
+                    {% for ind in result.suspicious_indicators %}
+                    <div class="indicator">
+                        <strong>{{ ind.type }}</strong>
+                        <p>{{ ind.message }}</p>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <div class="card">
+                    <div class="widget-head"><h2>Recommendations</h2></div>
+                    <ul class="rec-list">
+                        {% for rec in result.recommendations %}
+                        <li>{{ rec }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="card mb-4 text-center">
+                    <div class="widget-head justify-content-center"><h2>Risk score</h2></div>
+                    <div class="gauge-wrap">
+                        <canvas id="risk-gauge-chart" width="140" height="140"></canvas>
+                        <div class="gauge-center">
+                            <span class="score">{{ result.risk_score }}</span>
+                            <span class="sub">/ 100</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="metrics mb-4">
+                    <div class="card metric">
+                        <div class="val">{{ result.phishing_probability }}%</div>
+                        <div class="lbl">Phishing probability</div>
+                    </div>
+                    <div class="card metric">
+                        <div class="val" style="font-size:15px;text-transform:capitalize;">{{ result.ssl_status }}</div>
+                        <div class="lbl">SSL · {{ result.ssl_details }}</div>
+                    </div>
+                    <div class="card metric">
+                        <div class="val" style="font-size:15px;text-transform:capitalize;">{{ result.blacklist_status }}</div>
+                        <div class="lbl">Blacklist{% if result.blacklist_sources %} · {{ result.blacklist_sources|join(', ') }}{% endif %}</div>
+                    </div>
+                </div>
+
+                <div class="card mb-4">
+                    <div class="widget-head"><h2>Breakdown</h2></div>
+                    <div class="chart-box"><canvas id="probability-chart"></canvas></div>
+                </div>
+
+                <div class="d-grid gap-2">
+                    <a href="{{ url_for('main.scan') }}" class="btn btn-primary">Scan another</a>
+                    <a href="{{ url_for('main.history') }}" class="btn btn-secondary">View history</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+window.resultData = { risk_score: {{ result.risk_score }}, phishing_probability: {{ result.phishing_probability }} };
+</script>
+<script src="{{ url_for('static', filename='js/result.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,110 @@
+{% extends "layout.html" %}
+{% block title %}Admin — SafeNet{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/pages/admin.css') }}">{% endblock %}
+
+{% block content %}
+<div class="section">
+    <div class="container">
+        <div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
+            <div class="page-header mb-0">
+                <p class="admin-tag mb-0">Administration</p>
+                <h1>System overview</h1>
+                <p>Users, threat trends, and service health.</p>
+            </div>
+            <a href="{{ url_for('main.dashboard') }}" class="btn btn-secondary btn-sm">Back to dashboard</a>
+        </div>
+
+        <div class="stat-grid mb-4">
+            <div class="card stat-card">
+                <div class="stat-label">Users</div>
+                <div class="stat-value" data-counter="{{ admin.total_users }}">0</div>
+            </div>
+            <div class="card stat-card">
+                <div class="stat-label">Active sessions</div>
+                <div class="stat-value" data-counter="{{ admin.active_sessions }}">0</div>
+            </div>
+            <div class="card stat-card">
+                <div class="stat-label">All-time scans</div>
+                <div class="stat-value" data-counter="{{ admin.total_scans_all_time }}">0</div>
+            </div>
+            <div class="card stat-card">
+                <div class="stat-label">System health</div>
+                {% for service, score in admin.system_health.items() %}
+                <div class="health-item">
+                    <div class="row-label"><span>{{ service }}</span><span>{{ score }}%</span></div>
+                    <div class="progress-bar"><span style="width:{{ score }}%"></span></div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="row g-4 mb-4">
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="widget-head"><h2>Malicious detections</h2><span>7 days</span></div>
+                    <div class="chart-panel"><canvas id="admin-threat-chart"></canvas></div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="card">
+                    <div class="widget-head"><h2>User growth</h2></div>
+                    <div class="chart-panel"><canvas id="admin-users-chart"></canvas></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-lg-4">
+                <div class="card">
+                    <div class="widget-head"><h2>Top flagged domains</h2></div>
+                    {% for domain in admin.top_threat_domains %}
+                    <div class="domain-row">
+                        <span style="font-family:var(--font-mono);font-size:13px;">{{ domain.domain }}</span>
+                        <span class="count">{{ domain.count }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="col-lg-8">
+                <div class="table-wrap">
+                    <div class="p-3 border-bottom" style="border-color:var(--border)!important;">
+                        <h2 style="font-size:15px;font-weight:600;margin:0;">Users</h2>
+                    </div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Email</th>
+                                <th>Role</th>
+                                <th>Scans</th>
+                                <th>Status</th>
+                                <th>Last login</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for user in admin.users %}
+                            <tr>
+                                <td>{{ user.email }}</td>
+                                <td>{{ user.role }}</td>
+                                <td>{{ user.scans }}</td>
+                                <td><span class="status-pill {{ user.status }}">{{ user.status }}</span></td>
+                                <td class="cell-mono">{{ user.last_login }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+window.adminData = {
+    malicious_trend: {{ admin.malicious_trend|tojson }},
+    users_growth: {{ admin.users_growth|tojson }}
+};
+</script>
+<script src="{{ url_for('static', filename='js/admin.js') }}"></script>
+{% endblock %}

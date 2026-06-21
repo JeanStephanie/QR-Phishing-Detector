@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+{% block title %}Sign in — SafeNet{% endblock %}
+{% block footer %}{% endblock %}
+
+{% block content %}
+<div class="auth-page">
+    <div class="card auth-card">
+        <h1>Sign in</h1>
+        <p class="auth-lead">Access your dashboard and scan history.</p>
+
+        <form method="post">
+            <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control" id="email" name="email" placeholder="you@company.com" required autocomplete="email">
+            </div>
+            <div class="mb-4">
+                <label for="password" class="form-label">Password</label>
+                <div class="input-wrap">
+                    <input type="password" class="form-control" id="password" name="password" required autocomplete="current-password">
+                    <button type="button" class="toggle-pw" aria-label="Show password"><i data-lucide="eye"></i></button>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Sign in</button>
+        </form>
+
+        <div class="auth-divider">or</div>
+        <p class="text-center mb-0" style="font-size:14px;color:var(--text-secondary);">
+            No account? <a href="{{ url_for('main.register') }}" class="link">Create one</a>
+        </p>
+    </div>
+</div>
+{% endblock %}

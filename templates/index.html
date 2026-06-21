@@ -1,0 +1,142 @@
+{% extends "layout.html" %}
+{% block title %}Home — SafeNet{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/pages/home.css') }}">{% endblock %}
+
+{% block content %}
+<section class="hero hero-parallax-wrap">
+    <div class="hero-bg-glow" data-parallax="0.25" aria-hidden="true"></div>
+    <div class="container">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-6" data-parallax="0.12">
+                <p class="hero-eyebrow reveal">QR phishing detection</p>
+                <h1 class="reveal reveal-delay-1">Check any QR code before you open the link</h1>
+                <p class="hero-lead reveal reveal-delay-2">Upload an image or scan with your camera. We analyze the URL for phishing signals, SSL issues, and blacklist matches.</p>
+                <div class="hero-actions reveal reveal-delay-3">
+                    <a href="{{ url_for('main.scan') }}" class="btn btn-primary btn-lg">Scan a QR code</a>
+                    <a href="{{ url_for('main.webcam') }}" class="btn btn-secondary btn-lg">Use webcam</a>
+                </div>
+            </div>
+            <div class="col-lg-6" data-parallax="-0.18">
+                <div class="hero-preview reveal">
+                    <div class="preview-window">
+                        <div class="preview-bar"><span></span><span></span><span></span></div>
+                        <div class="preview-body">
+                            <div class="preview-row">
+                                <span style="color:var(--text-secondary)">Scan result</span>
+                                <span class="badge badge-danger">High risk</span>
+                            </div>
+                            <div class="preview-row">
+                                <span class="cell-mono" style="font-family:var(--font-mono);font-size:12px;">paypal-verify.xyz</span>
+                            </div>
+                            <div class="preview-row">
+                                <span style="color:var(--text-secondary)">Risk score</span>
+                                <strong>87</strong>
+                            </div>
+                            <div class="preview-row">
+                                <span style="color:var(--text-secondary)">SSL</span>
+                                <span style="color:var(--danger)">Invalid</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section-sm">
+    <div class="container">
+        <div class="stats-row reveal" data-parallax="0.08">
+            <div class="stat-card motion-lift">
+                <div class="stat-label">Scans processed</div>
+                <div class="stat-value" data-counter="{{ live_stats.scans_processed }}">0</div>
+            </div>
+            <div class="stat-card motion-lift">
+                <div class="stat-label">Threats flagged</div>
+                <div class="stat-value" data-counter="{{ live_stats.threats_detected }}">0</div>
+            </div>
+            <div class="stat-card motion-lift">
+                <div class="stat-label">URLs checked</div>
+                <div class="stat-value" data-counter="{{ live_stats.urls_analyzed }}">0</div>
+            </div>
+            <div class="stat-card motion-lift">
+                <div class="stat-label">Uptime</div>
+                <div class="stat-value" data-counter="{{ live_stats.uptime_percent }}" data-suffix="%" data-decimals="2">0</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <div class="page-header mb-5 reveal">
+            <h1>What you get</h1>
+            <p>Practical checks that matter when a QR code lands in your inbox or on a poster.</p>
+        </div>
+        <div class="features-grid">
+            <div class="card feature-item motion-lift reveal">
+                <h3>URL risk scoring</h3>
+                <p>Phishing probability and a simple 0–100 risk score so you can decide fast.</p>
+            </div>
+            <div class="card feature-item motion-lift reveal reveal-delay-1">
+                <h3>SSL & certificate checks</h3>
+                <p>See whether the destination uses valid HTTPS before you tap through.</p>
+            </div>
+            <div class="card feature-item motion-lift reveal reveal-delay-2">
+                <h3>Blacklist lookups</h3>
+                <p>Cross-check domains against known phishing feeds.</p>
+            </div>
+            <div class="card feature-item motion-lift reveal">
+                <h3>Scan history</h3>
+                <p>Search past scans, filter by verdict, and review timelines.</p>
+            </div>
+            <div class="card feature-item motion-lift reveal reveal-delay-1">
+                <h3>Team dashboard</h3>
+                <p>Volume, trends, and recent activity in one place.</p>
+            </div>
+            <div class="card feature-item motion-lift reveal reveal-delay-2">
+                <h3>Webcam scanning</h3>
+                <p>Point your camera at a code—no screenshot required.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section" style="background:var(--bg-subtle);border-top:1px solid var(--border);">
+    <div class="container">
+        <div class="row g-5 align-items-start">
+            <div class="col-lg-5">
+                <div class="page-header reveal">
+                    <h1>How it works</h1>
+                    <p>Three steps from image to answer.</p>
+                </div>
+            </div>
+            <div class="col-lg-7">
+                <div class="steps">
+                    <div class="step">
+                        <span class="step-num">1</span>
+                        <div>
+                            <h4>Upload or scan</h4>
+                            <p>Drop a PNG or JPG, or use the webcam on your phone or laptop.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <span class="step-num">2</span>
+                        <div>
+                            <h4>We read the QR payload</h4>
+                            <p>The link is extracted and passed through our analysis pipeline.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <span class="step-num">3</span>
+                        <div>
+                            <h4>Review the report</h4>
+                            <p>Verdict, indicators, and clear next steps—not jargon for its own sake.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

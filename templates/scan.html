@@ -1,0 +1,49 @@
+{% extends "layout.html" %}
+{% block title %}Scan — SafeNet{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/pages/scan.css') }}">{% endblock %}
+
+{% block content %}
+<div class="section">
+    <div class="container container-narrow">
+        <div class="page-header text-center mx-auto" style="max-width:480px;">
+            <h1>Scan a QR code</h1>
+            <p>Upload an image containing a QR code. We'll analyze the linked URL.</p>
+        </div>
+
+        <div id="upload-section">
+            <form id="scan-upload-form">
+                <div class="upload-area" id="upload-zone">
+                    <input type="file" name="qr_image" id="qr-file-input" accept="image/*" required>
+                    <i data-lucide="upload" style="width:28px;height:28px;color:var(--text-muted);"></i>
+                    <h3>Drop image here or click to browse</h3>
+                    <p>PNG, JPG, WEBP · max 16 MB</p>
+                </div>
+            </form>
+
+            <div class="preview-box" id="qr-preview-wrap">
+                <img id="qr-preview-img" src="" alt="Preview">
+                <div>
+                    <button type="button" id="start-scan-btn" class="btn btn-primary" disabled>Run analysis</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="card scan-panel" id="scan-interface">
+            <div class="spinner spinner-lg mx-auto"></div>
+            <p class="mb-0" style="font-weight:500;color:var(--text);">Analyzing…</p>
+            <p>This usually takes a few seconds</p>
+            <div class="progress-bar mx-auto" style="max-width:320px;margin-top:20px;">
+                <span id="scan-progress-fill" style="width:0%"></span>
+            </div>
+            <div class="scan-steps">
+                <span class="active" data-step="0">Decode</span>
+                <span data-step="1">Extract URL</span>
+                <span data-step="2">Analyze</span>
+                <span data-step="3">Report</span>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}<script src="{{ url_for('static', filename='js/scan.js') }}"></script>{% endblock %}

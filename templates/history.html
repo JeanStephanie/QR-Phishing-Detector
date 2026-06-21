@@ -1,0 +1,92 @@
+{% extends "layout.html" %}
+{% block title %}History — SafeNet{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/pages/history.css') }}">{% endblock %}
+
+{% block content %}
+<div class="section">
+    <div class="container">
+        <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
+            <div class="page-header mb-0">
+                <h1>Scan history</h1>
+                <p>{{ history.total }} results{% if search %} matching "{{ search }}"{% endif %}</p>
+            </div>
+            <a href="{{ url_for('main.scan') }}" class="btn btn-primary btn-sm">New scan</a>
+        </div>
+
+        <form method="get" class="filters">
+            <input type="search" name="q" class="form-control" placeholder="Search URL or ID…" value="{{ search }}">
+            <div class="filter-tabs">
+                <a href="{{ url_for('main.history', q=search) }}" class="{% if risk_filter == 'all' %}active{% endif %}">All</a>
+                <a href="{{ url_for('main.history', q=search, risk='safe') }}" class="{% if risk_filter == 'safe' %}active{% endif %}">Safe</a>
+                <a href="{{ url_for('main.history', q=search, risk='suspicious') }}" class="{% if risk_filter == 'suspicious' %}active{% endif %}">Suspicious</a>
+                <a href="{{ url_for('main.history', q=search, risk='malicious') }}" class="{% if risk_filter == 'malicious' %}active{% endif %}">Malicious</a>
+            </div>
+            <button type="submit" class="btn btn-secondary btn-sm">Search</button>
+        </form>
+
+        <div class="row g-4">
+            <div class="col-lg-8">
+                <div class="table-wrap">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>URL</th>
+                                <th>Verdict</th>
+                                <th>Score</th>
+                                <th>When</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in history.items %}
+                            <tr>
+                                <td class="cell-mono">{{ item.scan_id }}</td>
+                                <td class="cell-url" title="{{ item.url }}">{{ item.url }}</td>
+                                <td>
+                                    <span class="badge badge-{% if item.verdict == 'safe' %}safe{% elif item.verdict == 'suspicious' %}warning{% else %}danger{% endif %}">{{ item.verdict }}</span>
+                                </td>
+                                <td>{{ item.risk_score }}</td>
+                                <td class="cell-mono">{{ item.scanned_at }}</td>
+                            </tr>
+                            {% else %}
+                            <tr><td colspan="5" class="empty-state">No scans found.</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                {% if history.total_pages > 1 %}
+                <nav class="pagination">
+                    {% for p in range(1, history.total_pages + 1) %}
+                    <a href="{{ url_for('main.history', page=p, q=search, risk=risk_filter) }}" class="{% if p == history.page %}active{% endif %}">{{ p }}</a>
+                    {% endfor %}
+                </nav>
+                {% endif %}
+            </div>
+
+            <div class="col-lg-4">
+                <div class="card">
+                    <div class="widget-head"><h2>Recent</h2></div>
+                    <div class="timeline">
+                        {% for item in history.items[:5] %}
+                        <div class="timeline-item {% if item.verdict == 'malicious' %}danger{% elif item.verdict == 'suspicious' %}warn{% endif %}">
+                            <strong style="font-size:14px;">{{ item.verdict|title }}</strong>
+                            <p class="mb-0 mt-1" style="font-size:13px;color:var(--text-secondary);">{{ item.url|truncate(42) }}</p>
+                            <small style="color:var(--text-muted);">{{ item.scanned_at }}</small>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="card mt-3">
+                    <div class="chart-box" style="height:180px;"><canvas id="history-verdict-chart"></canvas></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>window.historyChartData = { safe: 45, suspicious: 20, malicious: 35 };</script>
+<script src="{{ url_for('static', filename='js/history.js') }}"></script>
+{% endblock %}

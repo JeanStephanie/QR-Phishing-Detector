@@ -1,0 +1,80 @@
+.upload-area {
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius-lg);
+  padding: 48px 24px;
+  text-align: center;
+  cursor: pointer;
+  background: var(--bg-subtle);
+  transition: border-color var(--transition), background var(--transition);
+  position: relative;
+}
+
+.upload-area:hover,
+.upload-area.dragover {
+  border-color: var(--accent);
+  background: var(--accent-muted);
+}
+
+.upload-area input[type="file"] {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.upload-area h3 {
+  font-size: 15px;
+  font-weight: 600;
+  margin: 12px 0 6px;
+}
+
+.upload-area p {
+  margin: 0;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.preview-box {
+  display: none;
+  margin-top: 24px;
+  text-align: center;
+}
+
+.preview-box.show { display: block; }
+
+.preview-box img {
+  max-width: 200px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  margin-bottom: 16px;
+}
+
+.scan-panel {
+  display: none;
+  text-align: center;
+  padding: 48px 24px;
+}
+
+.scan-panel.show { display: block; }
+
+.scan-panel p {
+  color: var(--text-secondary);
+  font-size: 14px;
+  margin-top: 12px;
+}
+
+.scan-steps {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  margin-top: 28px;
+  flex-wrap: wrap;
+}
+
+.scan-steps span {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.scan-steps span.active { color: var(--text); font-weight: 500; }
+.scan-steps span.done { color: var(--success); }
